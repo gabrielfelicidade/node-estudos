@@ -1,13 +1,23 @@
-const users = [
-    { id: 1, name: 'Peter', email: 'peter@peter.com' },
-    { id: 2, name: 'Parker', email: 'parker@peter.com' }
-];
+import * as mongoose from 'mongoose';
 
-export class User {
-    static findAll(): Promise<any> {
-        return Promise.resolve(users);
-    }
-    static findById(id: number): Promise<any> {
-        return Promise.resolve(users.find(o => o.id == id));
-    }
+export interface User extends mongoose.Document {
+    name: string,
+    email: string,
+    password: string
 }
+
+const userSchema = new mongoose.Schema({
+    name: {
+        type: String
+    },
+    email: {
+        type: String,
+        unique: true
+    },
+    password: {
+        type: String,
+        select: false
+    }
+});
+
+export const User = mongoose.model<User>('User', userSchema);
